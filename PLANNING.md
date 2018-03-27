@@ -32,11 +32,11 @@ When the user visits the URL, they will be directed to a boilerplate chat React 
     * password *text*
     * email *email*
     * phone number *text*
-    * joinedRooms *array*
 * ROOMS '/rooms'
     * urlname *text*
     * title *text*
     * channels *array*
+    * users *reference userId*
 * MESSAGES '/messages'
     * created *timestamp*
     * body
