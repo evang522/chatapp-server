@@ -24,7 +24,7 @@ router.get('/rooms/:urlname', (req,res,next) => {
   const {urlname} = req.params;
   Room.findOne({urlname})
     .then(dbres => {
-      if (dbres === []) {
+      if (dbres === [] || dbres === null) {
         const err = new Error();
         err.status = 400;
         err.message = 'Room with this url could not be found';
@@ -36,9 +36,8 @@ router.get('/rooms/:urlname', (req,res,next) => {
 
 
 // CREATE NEW ROOM
-
 router.post('/rooms', (req,res,next) => {
-  const requiredFields = ['urlname'];
+  const requiredFields = ['urlname', 'title'];
   const newRoom = {};
 
   requiredFields.forEach(field => {
@@ -64,6 +63,7 @@ router.post('/rooms', (req,res,next) => {
 });
 
 
+// TODO: Prevent users from creating channels that have the same name as others.
 
 router.put('/rooms/:id', (req,res,next) => {
   const {id} = req.params;

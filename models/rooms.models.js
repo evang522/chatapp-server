@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 const ChannelSchema = new mongoose.Schema({
   title: {
     type:String,
-    unique:true
   }
 });
 
