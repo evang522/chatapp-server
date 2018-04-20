@@ -5,13 +5,20 @@ const app = express();
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const {PORT} = require('./config');
+const {CLIENT_ORIGIN} = require('./config');
 const Room = require('./models/rooms.models');
 const roomRoute = require('./routes/rooms.routes');
+const cors = require('cors');
 
 // JSON body parsing middleware
 app.use(express.json());
 
-
+// CORS middleware
+app.use(
+  cors({
+    origin: CLIENT_ORIGIN
+  })
+);
 
 // logging middleware
 app.use(morgan('common'));

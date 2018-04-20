@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 const ChannelSchema = new mongoose.Schema({
   title: {
     type:String,
-    unique:true
   }
 });
 
@@ -22,7 +21,8 @@ const RoomSchema = new mongoose.Schema({
   created: {
     type:Date,
     default:Date.now()
-  }
+  },
+  members:[{type: mongoose.Schema.Types.ObjectId, ref:'User'}]
 });
 
 

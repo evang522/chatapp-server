@@ -20,14 +20,14 @@ router.get('/rooms', (req,res,next) => [
 
 
 // GET ROOM BY ID
-router.get('/rooms/:id', (req,res,next) => {
-  const {id} = req.params;
-  Room.findById(id)
+router.get('/rooms/:urlname', (req,res,next) => {
+  const {urlname} = req.params;
+  Room.findOne({urlname})
     .then(dbres => {
-      if (dbres === []) {
+      if (dbres === [] || dbres === null) {
         const err = new Error();
         err.status = 400;
-        err.message = 'Room with this ID could not be found';
+        err.message = 'Room with this url could not be found';
         return next(err);
       }
       res.json(dbres);
@@ -36,15 +36,14 @@ router.get('/rooms/:id', (req,res,next) => {
 
 
 // CREATE NEW ROOM
-
 router.post('/rooms', (req,res,next) => {
-  const requiredFields = ['urlname'];
+  const requiredFields = ['urlname', 'title'];
   const newRoom = {};
 
   requiredFields.forEach(field => {
     if (!(field in req.body)) {
       const err = new Error();
-      err.message = `Missin ${field} field`;
+      err.message = `Missing ${field} field`;
       err.status = 400;
       return next(err);
     }
@@ -64,6 +63,7 @@ router.post('/rooms', (req,res,next) => {
 });
 
 
+// TODO: Prevent users from creating channels that have the same name as others.
 
 router.put('/rooms/:id', (req,res,next) => {
   const {id} = req.params;
