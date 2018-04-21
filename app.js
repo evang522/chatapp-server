@@ -9,6 +9,7 @@ const {CLIENT_ORIGIN} = require('./config');
 const Room = require('./models/rooms.models');
 const roomRoute = require('./routes/rooms.routes');
 const cors = require('cors');
+const messageRoute = require('./routes/messages.routes');
 
 // JSON body parsing middleware
 app.use(express.json());
@@ -24,6 +25,8 @@ app.use(
 app.use(morgan('common'));
 
 
+
+
 app.get('/', (req,res) => {
   res.send('This is an API server. You won\'t be seeing anything pretty at this url');
 });
@@ -31,6 +34,7 @@ app.get('/', (req,res) => {
 
 // Bring in API Resource Routes
 app.use('/api', roomRoute);
+app.use('/api', messageRoute);
 
 
 

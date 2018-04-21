@@ -7,8 +7,10 @@ const UserSchema = new mongoose.Schema({
   created: Date(),
   email: String,
   phone: String,
-  rooms: [{type:mongoose.Schema.Types.ObjectId, ref: 'Room'}],
   avatar: {
+    type:String
+  },
+  handle: {
     type:String
   }
 });
