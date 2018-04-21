@@ -4,9 +4,11 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
   name: String,
   password:String,
-  created: Date(),
+  created: {
+    type:Date,
+    default:Date.now()
+  },
   email: String,
-  phone: String,
   avatar: {
     type:String
   },
@@ -15,4 +17,13 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('rooms', UserSchema);
+UserSchema.set('toObject', {virtuals:true},{
+  transform: function (doc, ret) {
+    ret.id = ret._id,
+    delete ret._id,
+    delete ret.password,
+    delete ret.__v;
+  }
+});
+
+module.exports = mongoose.model('User', UserSchema);
