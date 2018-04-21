@@ -37,8 +37,11 @@ const MessageSchema = new mongoose.Schema({
   thread: {
     type:[ThreadMessageSchema],
     default:[]
+  },
+  channel: {
+    type: mongoose.Schema.Types.ObjectId, ref:'Room.channels'
   }
 });
 
 
-module.exports = mongoose.Model('Message', MessageSchema);
+module.exports = mongoose.model('Message', MessageSchema);

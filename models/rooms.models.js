@@ -6,6 +6,9 @@ const mongoose = require('mongoose');
 const ChannelSchema = new mongoose.Schema({
   title: {
     type:String,
+  },
+  members: {
+    type: [{type:mongoose.Schema.Types.ObjectId, ref: 'User'}]
   }
 });
 

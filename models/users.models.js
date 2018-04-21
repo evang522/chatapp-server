@@ -4,13 +4,26 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
   name: String,
   password:String,
-  created: Date(),
+  created: {
+    type:Date,
+    default:Date.now()
+  },
   email: String,
-  phone: String,
-  rooms: [{type:mongoose.Schema.Types.ObjectId, ref: 'Room'}],
   avatar: {
+    type:String
+  },
+  handle: {
     type:String
   }
 });
 
-module.exports = mongoose.model('rooms', UserSchema);
+UserSchema.set('toObject', {virtuals:true},{
+  transform: function (doc, ret) {
+    ret.id = ret._id,
+    delete ret._id,
+    delete ret.password,
+    delete ret.__v;
+  }
+});
+
+module.exports = mongoose.model('User', UserSchema);
