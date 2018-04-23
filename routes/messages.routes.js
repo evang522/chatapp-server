@@ -27,7 +27,7 @@ router.get('/messages', (req,res,next) => {
     return next(err);
   }
 
-  Message.find({'_id':channelId})
+  Message.find({'channel':channelId})
     .then(response => {
       if (!response || !response.length) {
         const err = new Error();
@@ -55,7 +55,7 @@ router.post('/messages', (req,res,next) => {
   if (!body || !author) {
     const err = new Error();
     err.status = 400;
-    err.message = 'Missing one of required fields \'body\' and \'author\'';
+    err.message = 'Missing one of required fields \'body\' or \'author\'.';
     return next(err);
   }
 
@@ -106,7 +106,7 @@ router.put('/messages/:id', (req,res,next) => {
     return next(err);
   }
 
-  Message.findByIdAndUpdate(id,{$set: {body}}, {new:true})
+  Message.findByIdAndUpdate(id,{$set: {body, edited:true}}, {new:true})
     .then(response => {
       res.status(200).json(response);
     })
@@ -126,12 +126,10 @@ router.delete('/messages/:id', (req,res,next) => {
   }
   
   Message.findByIdAndRemove(id)
-    .then(response => {
+    .then(() => {
       res.status(204).end();
     })
-    .catch(err => {
-      return next(err);
-    });
+    .catch(next);
 
 });
 

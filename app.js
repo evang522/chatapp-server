@@ -41,7 +41,7 @@ app.use('/api', userRouter);
 app.use((err,req,res,next) => {
   err.message = err.message || 'Internal Server Error';
   err.status = err.status || 500;
-  res.json({
+  res.status(err.status).json({
     message: err.message,
     status: err.status
   });
