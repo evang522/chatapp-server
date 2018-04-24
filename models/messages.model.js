@@ -28,7 +28,7 @@ const MessageSchema = new mongoose.Schema({
   },
   created: {
     type:Date,
-    default: Date.now(),
+    default: new Date()
   },
   edited: {
     type:Boolean,
