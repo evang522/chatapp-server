@@ -23,7 +23,7 @@ const RoomSchema = new mongoose.Schema({
   },
   created: {
     type:Date,
-    default:Date.now()
+    default: new Date()
   },
   members:[{type: mongoose.Schema.Types.ObjectId, ref:'User'}]
 });

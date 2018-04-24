@@ -67,7 +67,7 @@ router.post('/rooms', (req,res,next) => {
 
 router.put('/rooms/:id', (req,res,next) => {
   const {id} = req.params;
-
+  
   if (req.body.type === 'addChannel') {
     const {channelToAdd} = req.body;
     const trimmedChannelToRemove = channelToAdd.trim();
