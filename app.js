@@ -19,7 +19,7 @@ app.use(express.json());
 
 // CORS middleware
 app.use(
-  cors('*')
+  cors(CLIENT_ORIGIN)
 );
 
 // logging middleware
@@ -51,6 +51,7 @@ app.use((err,req,res,next) => {
 
 mongoose.connect(DB_URL)
   .then(() => {
+    console.log(DB_URL);
     console.log('db connected');
   })
   .catch(err => {
