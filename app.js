@@ -1,4 +1,5 @@
 'use strict';
+
 // Bring in all Dependencies
 const express = require('express');
 const app = express();
@@ -11,15 +12,14 @@ const roomRoute = require('./routes/rooms.routes');
 const cors = require('cors');
 const messageRoute = require('./routes/messages.routes');
 const userRouter = require('./routes/users.routes');
+const DB_URL = require('./config');
 
 // JSON body parsing middleware
 app.use(express.json());
 
 // CORS middleware
 app.use(
-  cors({
-    origin: CLIENT_ORIGIN
-  })
+  cors('*')
 );
 
 // logging middleware
@@ -49,7 +49,7 @@ app.use((err,req,res,next) => {
 
 
 
-mongoose.connect('mongodb://localhost/chatapp')
+mongoose.connect(DB_URL)
   .then(() => {
     console.log('db connected');
   })
