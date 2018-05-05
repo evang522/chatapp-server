@@ -48,10 +48,10 @@ app.use((err,req,res,next) => {
 });
 
 
+console.log(DB_URL);
 
 mongoose.connect(DB_URL)
   .then(() => {
-    console.log(DB_URL);
     console.log('db connected');
   })
   .catch(err => {
