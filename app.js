@@ -12,7 +12,7 @@ const roomRoute = require('./routes/rooms.routes');
 const cors = require('cors');
 const messageRoute = require('./routes/messages.routes');
 const userRouter = require('./routes/users.routes');
-const DB_URL = require('./config');
+const {DB_URL} = require('./config');
 
 // JSON body parsing middleware
 app.use(express.json());
