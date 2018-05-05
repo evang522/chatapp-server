@@ -6,18 +6,19 @@ const UserSchema = new mongoose.Schema({
   password:String,
   created: {
     type:Date,
-    default: new Date()
+    default: Date.now()
   },
   email: String,
   avatar: {
     type:String
   },
   handle: {
-    type:String
+    type:String,
+    unique:true
   }
 });
 
-UserSchema.set('toObject', {virtuals:true},{
+UserSchema.set('toObject', {
   transform: function (doc, ret) {
     ret.id = ret._id,
     delete ret._id,

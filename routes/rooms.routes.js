@@ -3,11 +3,12 @@
 const express = require('express');
 const router = express.Router();
 const Room = require('../models/rooms.models');
+const jwtAuth = require('../utils/jwtauth.utils');
 
 
 
 // GET ALL ROOMS
-router.get('/rooms', (req,res,next) => [
+router.get('/rooms',(req,res,next) => [
   Room.find({})
     .then(rooms => {
       res.json(rooms);

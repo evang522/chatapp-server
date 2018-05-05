@@ -1,6 +1,7 @@
 'use strict';
 
-// Bring in all Dependencies
+//================================== Import Dependencies ====================>
+
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -13,8 +14,12 @@ const cors = require('cors');
 const messageRoute = require('./routes/messages.routes');
 const userRouter = require('./routes/users.routes');
 const {DB_URL} = require('./config');
+require('dotenv').config();
+const authRoute = require('./routes/auth.routes');
+ 
 
-// JSON body parsing middleware
+//================================== Set up Middleware ====================>
+
 app.use(express.json());
 
 // CORS middleware
@@ -27,11 +32,12 @@ app.use(morgan('common'));
 
 
 app.get('/', (req,res) => {
-  res.send('This is an API server. You won\'t be seeing anything pretty at this url');
+  res.send('This is an API server. You won\'t be seeing anything pretty at this url!');
 });
 
 
 // Bring in API Resource Routes
+app.use('/auth', authRoute);
 app.use('/api', roomRoute);
 app.use('/api', messageRoute);
 app.use('/api', userRouter);
@@ -48,7 +54,7 @@ app.use((err,req,res,next) => {
 });
 
 
-console.log(DB_URL);
+// console.log(DB_URL);
 
 mongoose.connect(DB_URL)
   .then(() => {
