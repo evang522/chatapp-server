@@ -25,7 +25,7 @@ app.use(express.json());
 
 // CORS middleware
 app.use(
-  cors()
+  cors(CLIENT_ORIGIN)
 );
 
 // logging middleware
