@@ -1,5 +1,8 @@
 'use strict';
 const mongoose = require('mongoose');
+const currentMoment = () => {
+  return Date.now();
+};
 
 const ThreadMessageSchema = new mongoose.Schema({
   body: {
@@ -28,7 +31,7 @@ const MessageSchema = new mongoose.Schema({
   },
   created: {
     type:Date,
-    default: new Date()
+    default: currentMoment
   },
   edited: {
     type:Boolean,

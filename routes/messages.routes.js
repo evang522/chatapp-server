@@ -28,22 +28,19 @@ router.get('/messages', (req,res,next) => {
   }
 
   Message.find({'channel':channelId})
+    .populate('author','handle')
     .then(response => {
-      if (!response || !response.length) {
-        const err = new Error();
-        err.status = 404;
-        err.message = 'No messages found';
-        return next(err);
-      }
-
       res.json(response);
     });
 
 });
 
+
+//================================== Add New Message ====================>
+
 router.post('/messages', (req,res,next) => {
   const {channelId} = req.query;
-  const {body,author} = req.body;
+  const {body} = req.body;
   
   if (!channelId) {
     const err = new Error();
@@ -52,10 +49,10 @@ router.post('/messages', (req,res,next) => {
     return next(err);
   }
 
-  if (!body || !author) {
+  if (!body) {
     const err = new Error();
     err.status = 400;
-    err.message = 'Missing one of required fields \'body\' or \'author\'.';
+    err.message = 'Missing required field \'body\'.';
     return next(err);
   }
 
@@ -74,7 +71,7 @@ router.post('/messages', (req,res,next) => {
 
   const newMessage = {
     body,
-    author,
+    author:req.user.id,
     channel:channelId
   };
 

@@ -2,13 +2,15 @@
 //================================== Require Dependencies ====================>
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
+const jwtAuth = require('../utils/jwtauth.utils');
 
 //================================== Bring in Models ====================>
 const User = require('../models/users.models');
 
 
 //================================== GET /users ====================>
-router.get('/users/:id', (req,res,next) => {
+router.get('/users/:id', jwtAuth, (req,res,next) => {
   const {id} = req.params;
 
   if (!id) {
@@ -35,6 +37,8 @@ router.post('/users', (req,res,next) => {
 
   const newUser = {};
   requiredFields.forEach(field => {
+
+    // Validation
     if (!(field in req.body)) {
       const err = new Error();
       err.message = `Missing ${field} field `;
@@ -43,17 +47,43 @@ router.post('/users', (req,res,next) => {
     }
 
     if (field === 'password') {
-      if (field.length < 8) {
+      if (req.body[field].length < 8) {
         const err = new Error();
         err.status = 400;
         err.messsage = 'Password must be at least 8 characters';
         return next(err);
       }
 
-      if (field.length !== field.trim().length) {
+      if (req.body[field].length !== req.body[field].trim().length) {
         const err = new Error();
         err.status = 400;
         err.message = 'Password contains white space';
+        return next(err);
+      }
+    }
+    
+    if (field === 'handle') {
+      if (req.body[field].indexOf('@') !== -1) {
+        const err = new Error();
+        err.message = 'Handles may not contain @ character';
+        err.status = 400;
+        return next(err);
+      }
+    }
+
+    if (field === 'email') {
+      const email = req.body[field];
+      if (!email.indexOf('@') === -1) {
+        const err = new Error();
+        err.message = 'Invalid email format';
+        err.status = 400;
+        return next(err);
+      }
+
+      if (!email.indexOf('.') === -1) {
+        const err = new Error();
+        err.message = 'Invalid email format';
+        err.status = 400;
         return next(err);
       }
     }
@@ -61,13 +91,41 @@ router.post('/users', (req,res,next) => {
     newUser[field] = req.body[field];
   });
 
-  User.create(newUser)
+
+  User.find({$or: [{'email':newUser.email},{'handle':newUser.handle}]})
     .then(response => {
-      res.status(201).json(response);
-    })
-    .catch(err => {
-      return next(err);
+      if (response.length) {
+        const err = new Error();
+        err.status = 400;
+        err.message = 'User with this handle or email already exists';
+        return next(err);
+      }
+
+      bcrypt.hash(newUser.password,10,(err,hash) => {
+        if (err) {
+          return next(err);
+        } 
+    
+        // Assign hashed password to new user object.
+        newUser.password = hash;  
+    
+        User.create(newUser)
+          .then(response => {
+            res.status(201).json(response);
+          })
+          .catch(err => {
+            return next(err);
+          });  
+      });
+
+
     });
+
+
+
+
+
+
 });
 
 

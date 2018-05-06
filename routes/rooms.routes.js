@@ -6,16 +6,16 @@ const Room = require('../models/rooms.models');
 
 
 
-// GET ALL ROOMS
-router.get('/rooms', (req,res,next) => [
-  Room.find({})
+// GET ALL ROOMS User is a part of: 
+router.get('/rooms',(req,res,next) => {
+  Room.find({'members':req.user.id})
     .then(rooms => {
       res.json(rooms);
     })
     .catch(err => {
       next(err);
-    })
-]);
+    });
+});
 
 
 
@@ -54,7 +54,11 @@ router.post('/rooms', (req,res,next) => {
 
   Room.create(newRoom)
     .then(room => {
-      res.json(room);
+
+      Room.update({'_id':room.id}, {$push: {'members': req.user.id}}, {new:true})
+        .then(response => {
+          res.json(response);
+        });
     })
     .catch(err => {
       next(err);
