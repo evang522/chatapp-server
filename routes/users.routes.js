@@ -3,13 +3,14 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const jwtAuth = require('../utils/jwtauth.utils');
 
 //================================== Bring in Models ====================>
 const User = require('../models/users.models');
 
 
 //================================== GET /users ====================>
-router.get('/users/:id', (req,res,next) => {
+router.get('/users/:id', jwtAuth, (req,res,next) => {
   const {id} = req.params;
 
   if (!id) {

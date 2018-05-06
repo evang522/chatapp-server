@@ -39,12 +39,13 @@ router.post('/login', (req,res,next) => {
       if (!response.length) {
         const err = new Error();
         err.message = 'User not found';
+        err.status = 400;
         return next(err);
       }
 
 
       const userInfo = {};
-      const jwtFields = ['email','name','id','handle','created'];
+      const jwtFields = ['email','name','_id','handle','created'];
       jwtFields.forEach(field => {
         userInfo[field] = response[0]['_doc'][field];
       });

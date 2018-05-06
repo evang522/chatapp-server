@@ -16,6 +16,7 @@ const userRouter = require('./routes/users.routes');
 const {DB_URL} = require('./config');
 require('dotenv').config();
 const authRoute = require('./routes/auth.routes');
+const jwtAuth = require('./utils/jwtauth.utils');
  
 
 //================================== Set up Middleware ====================>
@@ -24,7 +25,7 @@ app.use(express.json());
 
 // CORS middleware
 app.use(
-  cors(CLIENT_ORIGIN)
+  cors()
 );
 
 // logging middleware
@@ -37,10 +38,11 @@ app.get('/', (req,res) => {
 
 
 // Bring in API Resource Routes
-app.use('/auth', authRoute);
+app.use('/api/auth', authRoute);
+app.use('/api', userRouter);
+app.use(jwtAuth);
 app.use('/api', roomRoute);
 app.use('/api', messageRoute);
-app.use('/api', userRouter);
 
 
 
