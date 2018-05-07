@@ -73,10 +73,17 @@ router.put('/rooms/:id', (req,res,next) => {
   const {id} = req.params;
   
   if (req.body.type === 'addChannel') {
-    const {channelToAdd} = req.body;
+    const {channelToAdd, purpose} = req.body;
     const trimmedChannelToRemove = channelToAdd.trim();
     
-    return Room.findByIdAndUpdate(id, {$push: {'channels': {'title':trimmedChannelToRemove}}}, {new:true})
+    if (trimmedChannelToRemove === 'General') {
+      const err = new Error();
+      err.status = 400;
+      err.message = 'Cannot create a secondary Main Channel.';
+      return next(err);
+    }
+
+    return Room.findByIdAndUpdate(id, {$push: {'channels': {'title':trimmedChannelToRemove, purpose}}}, {new:true})
       .then(room => {
         res.status(200).json(room);
       });
