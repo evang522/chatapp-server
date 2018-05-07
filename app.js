@@ -18,6 +18,9 @@ require('dotenv').config();
 const authRoute = require('./routes/auth.routes');
 const jwtAuth = require('./utils/jwtauth.utils');
  
+//initialize Socket.io
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 
 //================================== Set up Middleware ====================>
 
@@ -56,7 +59,17 @@ app.use((err,req,res,next) => {
 });
 
 
-// console.log(DB_URL);
+io.on('connection', socket => {
+  socket.join(socket.handshake.query.room);
+  console.log('client joined ' + socket.handshake.query.room);
+  socket.on('newmessage', (roomName) => {
+    console.log('newMessage emit received');
+    setTimeout(() => io.to(roomName).emit('newmessage'), 200);
+  });
+});
+
+
+
 
 mongoose.connect(DB_URL)
   .then(() => {
@@ -66,7 +79,7 @@ mongoose.connect(DB_URL)
     console.log(err);
   });
 
-app.listen(PORT, () => {
+http.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
 

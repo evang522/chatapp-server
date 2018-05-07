@@ -9,6 +9,9 @@ const ChannelSchema = new mongoose.Schema({
   },
   members: {
     type: [{type:mongoose.Schema.Types.ObjectId, ref: 'User'}]
+  },
+  purpose: {
+    type:String
   }
 });
 
@@ -31,7 +34,7 @@ const RoomSchema = new mongoose.Schema({
 
 RoomSchema.pre('save',function(next) {
   if (this.channels.length === 0)
-    this.channels.push({'title':'General'});
+    this.channels.push({'title':'Main'});
   next();
 });
 
