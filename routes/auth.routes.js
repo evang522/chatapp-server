@@ -6,6 +6,7 @@ const User = require('../models/users.models');
 const {JWT_SECRET} = require('../config');
 const dayAdder = require('../utils/dayAdder.utils');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 //================================== Login Route ====================>
 router.post('/login', (req,res,next) => {
@@ -36,6 +37,14 @@ router.post('/login', (req,res,next) => {
 
   User.find({$or: [{'email':userInfo.identifier},{'handle':userInfo.identifier}]})
     .then(response => {
+
+      if (!bcrypt.compareSync(userInfo.password, response[0].password)) {
+        const err = new Error();
+        err.message = 'Incorrect Password';
+        err.status = 400;
+        return next(err);
+      }
+
       if (!response.length) {
         const err = new Error();
         err.message = 'User not found';
@@ -44,17 +53,17 @@ router.post('/login', (req,res,next) => {
       }
 
 
-      const userInfo = {};
+      const dbuserInfo = {};
       const jwtFields = ['email','name','_id','handle','created'];
       jwtFields.forEach(field => {
-        userInfo[field] = response[0]['_doc'][field];
+        dbuserInfo[field] = response[0]['_doc'][field];
       });
 
-      userInfo.id = userInfo._id;
-      delete userInfo._id;
-      userInfo.iat = Date.now();
-      userInfo.exp = dayAdder(userInfo.iat, 15);
-      const authToken = jwt.sign(userInfo, JWT_SECRET);
+      dbuserInfo.id = dbuserInfo._id;
+      delete dbuserInfo._id;
+      dbuserInfo.iat = Date.now();
+      dbuserInfo.exp = dayAdder(dbuserInfo.iat, 15);
+      const authToken = jwt.sign(dbuserInfo, JWT_SECRET);
       res.json({authToken});
     });
 });

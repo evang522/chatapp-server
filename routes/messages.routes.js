@@ -29,6 +29,7 @@ router.get('/messages', (req,res,next) => {
 
   Message.find({'channel':channelId})
     .populate('author','handle')
+    .sort({'created':1})
     .then(response => {
       res.json(response);
     });

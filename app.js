@@ -64,7 +64,7 @@ io.on('connection', socket => {
   console.log('client joined ' + socket.handshake.query.room);
   socket.on('newmessage', (roomName) => {
     console.log('newMessage emit received');
-    setTimeout(() => io.to(roomName).emit('newmessage'), 200);
+    setTimeout(() => io.to(roomName).emit('newmessage'), 100);
   });
 });
 

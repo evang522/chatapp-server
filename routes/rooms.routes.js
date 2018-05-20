@@ -76,7 +76,7 @@ router.put('/rooms/:id', (req,res,next) => {
     const {channelToAdd, purpose} = req.body;
     const trimmedChannelToRemove = channelToAdd.trim();
     
-    if (trimmedChannelToRemove === 'General') {
+    if (trimmedChannelToRemove === 'Main') {
       const err = new Error();
       err.status = 400;
       err.message = 'Cannot create a secondary Main Channel.';
