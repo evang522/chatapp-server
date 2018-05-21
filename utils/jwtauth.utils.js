@@ -32,8 +32,8 @@ const jwtAuth = (req,res,next) => {
     if (err) {
       const error = new Error();
       error.status = 403;
-      err.message = 'Invalid JWT token provided. Please log in again.';
-      return next(err);
+      error.message = 'Invalid JWT token provided. Please log in again.';
+      return next(error);
     } else {
       userInfo = decoded;
       User.find({'_id':userInfo.id})
